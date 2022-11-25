@@ -206,8 +206,8 @@ namespace kungfu
 
                     double bid_price[10];                       //申买价
                     double ask_price[10];                       //申卖价
-                    int64_t bid_volume[10];                     //申买量
-                    int64_t ask_volume[10];                     //申卖量
+                    double bid_volume[10];                     //申买量
+                    double ask_volume[10];                     //申卖量
 
                     std::string get_source_id() const
                     { return std::string(source_id); }
@@ -245,17 +245,17 @@ namespace kungfu
                     void set_ask_price(const std::vector<double> &ap)
                     { memcpy(ask_price, (const void*) ap.data(), sizeof(double) * std::min(10, int(ap.size())));}
 
-                    std::vector<int64_t> get_bid_volume() const
-                    { return std::vector<int64_t>(bid_volume, bid_volume + 10); }
+                    std::vector<double> get_bid_volume() const
+                    { return std::vector<double>(bid_volume, bid_volume + 10); }
 
-                    void set_bid_volume(const std::vector<int64_t> &bv)
-                    { memcpy(bid_volume, (const void*) bv.data(), sizeof(int64_t) * std::min(10, int(bv.size())));}
+                    void set_bid_volume(const std::vector<double> &bv)
+                    { memcpy(bid_volume, (const void*) bv.data(), sizeof(double) * std::min(10, int(bv.size())));}
 
-                    std::vector<int64_t> get_ask_volume() const
-                    { return std::vector<int64_t>(ask_volume, ask_volume + 10); }
+                    std::vector<double> get_ask_volume() const
+                    { return std::vector<double>(ask_volume, ask_volume + 10); }
 
-                    void set_ask_volume(const std::vector<int64_t> &av)
-                    { memcpy(ask_volume, (const void*) av.data(), sizeof(int64_t) * std::min(10, int(av.size())));}
+                    void set_ask_volume(const std::vector<double> &av)
+                    { memcpy(ask_volume, (const void*) av.data(), sizeof(double) * std::min(10, int(av.size())));}
 
 #ifndef _WIN32
                 } __attribute__((packed));
@@ -325,8 +325,8 @@ namespace kungfu
 
                     quote.set_bid_price(j["bid_price"].get<std::vector<double>>());
                     quote.set_ask_price(j["ask_price"].get<std::vector<double>>());
-                    quote.set_bid_volume(j["bid_volume"].get<std::vector<int64_t>>());
-                    quote.set_ask_volume(j["ask_volume"].get<std::vector<int64_t>>());
+                    quote.set_bid_volume(j["bid_volume"].get<std::vector<double>>());
+                    quote.set_ask_volume(j["ask_volume"].get<std::vector<double>>());
                 }
 
                 //逐笔委托
