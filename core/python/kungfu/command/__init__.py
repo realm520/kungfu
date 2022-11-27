@@ -75,6 +75,8 @@ def kfc(ctx, home, log_level, name):
         if osname == 'Windows':
             home = os.getenv('APPDATA')
         home = os.path.join(home, 'kungfu', 'app')
+        if not os.path.exists(home):
+            os.makedirs(home, exist_ok=True)
 
     os.environ['KF_HOME'] = ctx.home = home
     os.environ['KF_LOG_LEVEL'] = ctx.log_level = log_level
