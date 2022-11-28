@@ -13,6 +13,10 @@
 #define REGION_CN "CN"
 #define REGION_HK "HK"
 
+#define INST_TYPE_SPOT "SPOT"
+#define INST_TYPE_FUTURE "FUTURE"
+#define INST_TYPE_MARGIN "MARGIN"
+
 #define EXCHANGE_SSE "SSE"
 #define EXCHANGE_SZE "SZE"
 #define EXCHANGE_SHFE "SHFE"
@@ -51,7 +55,7 @@ namespace kungfu
             Bond,          //债券
             StockOption,   //股票期权
             Fund,          //基金
-            TechStock,     //科创板股票
+            Spot,          //现货
             Index,         //指数
             Repo           //回购
         };
@@ -370,67 +374,19 @@ namespace kungfu
 
         inline InstrumentType get_instrument_type(const std::string &instrument_id, const std::string &exchange_id)
         {
-            if (string_equals(exchange_id, EXCHANGE_SSE))
+            auto const pos = instrument_id.find_last_of('_');
+            const auto instType = instrument_id.substr(pos + 1);
+            if (string_equals(instType, INST_TYPE_SPOT))
             {
-                if (instrument_id.size() == 8)
-                {
-                    return InstrumentType::StockOption;
-                }
-                else if(startswith(instrument_id, "00"))
-                {
-                    return InstrumentType::Index;
-                }
-                else if(startswith(instrument_id, "0"))
-                {
-                    return InstrumentType::Bond;
-                }
-                else if(startswith(instrument_id, "1"))
-                {
-                    return InstrumentType::Bond;
-                }
-                else if(startswith(instrument_id, "2"))
-                {
-                    return InstrumentType::Repo;
-                }
-                else if (startswith(instrument_id, "5"))
-                {
-                    return InstrumentType::Fund;
-                }
-                else if(startswith(instrument_id, "6"))
-                {
-                    return InstrumentType::Stock;
-                }
+                return InstrumentType::Spot;
             }
-            else if(string_equals(exchange_id, EXCHANGE_SZE))
-            {
-                if (instrument_id.size() == 8)
-                {
-                    return InstrumentType::StockOption;
-                }
-                else if (startswith(instrument_id, "0"))
-                {
-                    return InstrumentType::Stock;
-                }
-                else if(startswith(instrument_id, "15") || startswith(instrument_id, "16") || startswith(instrument_id, "18"))
-                {
-                    return InstrumentType::Fund;
-                }
-                else if(startswith(instrument_id, "13"))
-                {
-                    return InstrumentType::Repo;
-                }
-                else if(startswith(instrument_id, "1"))
-                {
-                    return InstrumentType::Bond;
-                }
-                else if(startswith(instrument_id, "30"))
-                {
-                    return InstrumentType::Stock;
-                }
-            }
-            else if(string_equals(exchange_id, EXCHANGE_DCE) || string_equals(exchange_id, EXCHANGE_SHFE) || string_equals(exchange_id, EXCHANGE_CFFEX) || string_equals(exchange_id, EXCHANGE_CZCE) || string_equals(exchange_id, EXCHANGE_INE))
+            else if (string_equals(instType, INST_TYPE_FUTURE))
             {
                 return InstrumentType::Future;
+            }
+            else
+            {
+                return InstrumentType::Unknown;
             }
             return InstrumentType::Unknown;
         }
@@ -451,8 +407,8 @@ namespace kungfu
                     return "StockOption";
                 case InstrumentType::Fund:
                     return "Fund";
-                case InstrumentType::TechStock:
-                    return "TechStock";
+                case InstrumentType::Spot:
+                    return "SPOT";
                 case InstrumentType::Index:
                     return "Index";
                 case InstrumentType::Repo:
@@ -499,70 +455,6 @@ namespace kungfu
             } else
             {
                 return false;
-            }
-        }
-
-        inline std::string get_exchange_id_from_future_instrument_id(const std::string &instrument_id)
-        {
-            std::size_t found = instrument_id.find_first_of("0123456789");
-            std::string product = instrument_id.substr(0, found);
-            std::transform(product.begin(), product.end(), product.begin(), ::tolower);
-            if (product == "c" || product == "cs" || product == "a" || product == "b" || product == "m" || product == "y" ||
-                product == "p" || product == "fb" || product == "bb" || product == "jd" || product == "rr" || product == "l" ||
-                product == "v" || product == "pp" || product == "j" || product == "jm" || product == "i" || product == "eg" ||
-                product == "eb")
-            {
-                return EXCHANGE_DCE;
-            } else if (product == "wh" || product == "pm" || product == "cf" || product == "sr" || product == "oi" || product == "ri" ||
-                       product == "rs" || product == "rm" || product == "jr" || product == "lr" || product == "cy" || product == "ap" ||
-                       product == "cj" || product == "ta" || product == "ma" || product == "zc" || product == "sf" || product == "sm" ||
-                       product == "ur")
-            {
-                return EXCHANGE_CZCE;
-            } else if (product == "cu" || product == "al" || product == "zn" || product == "pb" || product == "ni" || product == "sn" ||
-                       product == "au" || product == "ag" || product == "rb" || product == "wr" || product == "hc" || product == "ss" ||
-                       product == "fu" || product == "bu" || product == "ru" || product == "nr" || product == "sp")
-            {
-                return EXCHANGE_SHFE;
-            } else if (product == "if" || product == "ic" || product == "ih" || product == "ts" || product == "tf" || product == "t")
-            {
-                return EXCHANGE_CFFEX;
-            } else if (product == "sc")
-            {
-                return EXCHANGE_INE;
-            } else
-            {
-                return "";
-            }
-        }
-
-        inline std::string get_exchange_id_from_stock_instrument_id(const std::string &instrument_id)
-        {
-            int code = atoi(instrument_id.c_str());
-            int head3 = code / 1000;
-            switch (head3)
-            {
-                case 001:
-                case 201:
-                case 100:
-                case 110:
-                case 120:
-                case 129:
-                case 310:
-                case 500:
-                case 600:
-                case 601:
-                case 700:
-                case 701:
-                case 710:
-                case 720:
-                case 730:
-                case 735:
-                case 737:
-                case 900:
-                    return EXCHANGE_SSE;
-                default:
-                    return EXCHANGE_SZE;
             }
         }
 

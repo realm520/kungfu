@@ -56,7 +56,7 @@ namespace kungfu
                 virtual void subscribe_all(const std::string &source);
 
                 //报单
-                //@param instrument_id 合约ID
+                //@param symbol        交易对名称
                 //@param exchange_id   交易所ID
                 //@param account_id    账户ID
                 //@param limit_price   价格

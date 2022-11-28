@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "bindings": "^1.5.0",
-    "nan": "^2.14.0"
+    "nan": "^2.17.0"
   },
   "devDependencies": {
     "cmake-js": "==5.3.1",

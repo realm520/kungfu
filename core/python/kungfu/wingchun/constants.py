@@ -3,17 +3,16 @@ import pywingchun
 
 class Source:
     CTP = "ctp"
-    XTP = "xtp"
-    OES = "oes"
+    SIM = "sim"
+    XT = 'xt'
+    RESTBN = "restbn"
 
 class Exchange:
     SSE = "SSE"
     SZE = "SZE"
     SHFE = "SHFE"
-    DCE = "DCE"
-    CZCE = "CZCE"
-    CFFEX = "CFFEX"
-    INE = "INE"
+    XT = 'XT'
+    BN = "bn"
 
 class Region:
     CN = 'CN'
@@ -38,7 +37,7 @@ AllFinalOrderStatus = [OrderStatus.Filled, OrderStatus.Error, OrderStatus.Partia
 InstrumentTypeInStockAccount = [InstrumentType.Stock,
                                 InstrumentType.Bond,
                                 InstrumentType.Fund,
-                                InstrumentType.TechStock,
+                                InstrumentType.Spot,
                                 InstrumentType.Index,
                                 InstrumentType.Repo]
 

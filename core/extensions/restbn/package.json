@@ -1,0 +1,33 @@
+{
+    "kungfuConfig": {
+      "type": "source",
+      "config": {
+        "name": "restbn",
+        "type": "stock",
+        "key": "user_id",
+        "config": [
+          {
+            "key": "user_id",
+            "name": "user_id",
+            "type": "str",
+            "errMsg": "请填写账户 user_id",
+            "required": true
+          },
+          {
+            "key": "api_key",
+            "name": "api_key",
+            "type": "str",
+            "errMsg": "请填写API Key",
+            "required": true
+          },
+          {
+            "key": "secret_key",
+            "name": "secret_key",
+            "type": "str",
+            "errMsg": "请填写Secret Key",
+            "required": true
+          }
+        ]
+      }
+    }
+  }
