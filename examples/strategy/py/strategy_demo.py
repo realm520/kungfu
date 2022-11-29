@@ -1,9 +1,10 @@
-import sys
+import random
 import kungfu.yijinjing.time as kft
 from kungfu.wingchun.constants import *
 
-source = Source.XTP
-exchange = Exchange.SSE
+md_source = Source.RESTBN
+td_source = Source.SIM
+exchange = Exchange.BN
 
 def test_timer(context, event):
     context.log.info('test timer')
@@ -13,13 +14,16 @@ def test_time_interval(context, event):
 
 def pre_start(context):
     context.log.info("pre run strategy")
-    context.add_account(source, "15040900", 100000000.0)
-    context.subscribe(source, ["600000", "601988"], exchange)
+    context.add_account(td_source, "sim1", 100000000.0)
+    context.subscribe(md_source, ["BTCUSDT_SPOT", "ETCUSDT_SPOT"], exchange)
 
 def on_quote(context, quote):
     context.logger.info("position: {}".format(context.book.get_position(quote.instrument_id, exchange)))
-    order_id = context.insert_order(quote.instrument_id, exchange, "15040900", quote.ask_price[0], 200, PriceType.Limit, Side.Buy, Offset.Open, HedgeFlag.Speculation)
-    context.log.info("quote received: [time]{} [instrument_id]{} [last_price]{}".format(kft.strftime(quote.data_time), quote.instrument_id, quote.last_price))
+    amount = random.uniform(1, 200)
+    order_id = context.insert_order(quote.instrument_id, exchange, "sim1", quote.ask_price[0], amount, PriceType.Limit, Side.Buy, Offset.Open, HedgeFlag.Speculation)
+    context.log.info(
+        "quote received: [time]{} [instrument_id]{} [last_price]{} [order_id]{}"\
+            .format(kft.strftime(quote.data_time), quote.instrument_id, quote.last_price, order_id))
 
 def on_transaction(context, transaction):
     context.log.info("{} {}".format(transaction.instrument_id, transaction.exchange_id))
